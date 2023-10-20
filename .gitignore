@@ -1,0 +1,7 @@
+/build
+
+# JetBrains
+/.idea
+
+# Node.js
+/node_modules

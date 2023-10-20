@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "noUncheckedIndexedAccess": true,
+    "outDir": "build",
+    "strict": true
+  },
+  "include": ["src"]
+}

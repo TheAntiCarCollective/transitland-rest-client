@@ -1,0 +1,5 @@
+# ESLint
+/.eslintrc.js
+
+# Jest
+/jest.config.js
