@@ -152,7 +152,7 @@ export class OnestopIdWrapper {
    * @param id The Onestop ID.
    * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
    */
-  static getEntityType(id: OnestopId) {
+  static entityTypeOf(id: OnestopId) {
     const { entityType } = new OnestopIdWrapper(id);
     return entityType;
   }
@@ -163,7 +163,7 @@ export class OnestopIdWrapper {
    * @param id The Onestop ID.
    * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
    */
-  static getGeohash(id: OnestopId) {
+  static geohashOf(id: OnestopId) {
     const { geohash } = new OnestopIdWrapper(id);
     return geohash;
   }
@@ -174,7 +174,7 @@ export class OnestopIdWrapper {
    * @param id The Onestop ID.
    * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
    */
-  static getName(id: OnestopId) {
+  static nameOf(id: OnestopId) {
     const { name } = new OnestopIdWrapper(id);
     return name;
   }

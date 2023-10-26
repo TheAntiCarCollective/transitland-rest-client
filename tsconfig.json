@@ -5,7 +5,9 @@
     "module": "commonjs",
     "noUncheckedIndexedAccess": true,
     "outDir": "build",
-    "strict": true
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2015"
   },
-  "include": ["src"]
+  "include": ["src/**/*", "scripts/**/*"]
 }

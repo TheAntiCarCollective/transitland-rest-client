@@ -9,7 +9,6 @@ module.exports = {
     "plugin:sonarjs/recommended",
     "plugin:unicorn/recommended",
   ],
-  ignorePatterns: ["/build/*"],
   parserOptions: {
     parser: "@typescript-eslint/parser",
     project: true,

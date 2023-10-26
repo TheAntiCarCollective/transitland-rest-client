@@ -70,17 +70,17 @@ describe.each([
 
   test(`entityType equals ${entityType}`, () => {
     expect(wrapper.entityType).toStrictEqual(entityType);
-    expect(OnestopIdWrapper.getEntityType(value)).toStrictEqual(entityType);
+    expect(OnestopIdWrapper.entityTypeOf(value)).toStrictEqual(entityType);
   });
 
   test(`geohash equals ${geohash}`, () => {
     expect(wrapper.geohash).toStrictEqual(geohash);
-    expect(OnestopIdWrapper.getGeohash(value)).toStrictEqual(geohash);
+    expect(OnestopIdWrapper.geohashOf(value)).toStrictEqual(geohash);
   });
 
   test(`name equals ${name}`, () => {
     expect(wrapper.name).toStrictEqual(name);
-    expect(OnestopIdWrapper.getName(value)).toStrictEqual(name);
+    expect(OnestopIdWrapper.nameOf(value)).toStrictEqual(name);
   });
 
   test(`value equals ${value}`, () => {

@@ -1,10 +1,4 @@
 /build
 
-# Git
-/.git
-
 # JetBrains
 /.idea
-
-# Node.js
-/node_modules

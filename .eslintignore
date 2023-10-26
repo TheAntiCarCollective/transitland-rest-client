@@ -1,5 +1,3 @@
-# ESLint
-/.eslintrc.js
-
-# Jest
-/jest.config.js
+**/*.generated.ts
+**/*.js
+/build
