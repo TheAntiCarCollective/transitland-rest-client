@@ -24,10 +24,7 @@ Easy to use, minimal, and simple implementation of the [Transitland v2 REST API]
 
 ```typescript
 import type { FeedResponse } from "transitland-rest-client";
-import Client, {
-  OnestopIdEntityType,
-  OnestopIdWrapper,
-} from "transitland-rest-client";
+import Client, { EntityType, OnestopId } from "transitland-rest-client";
 
 const client = new Client("YOUR_API_KEY_HERE");
 // or
@@ -55,12 +52,12 @@ for await (const { feeds } of pages) {
 // Onestop ID Utilities
 const { onestop_id } = feeds[0]; // f-9q9-caltrain
 
-OnestopIdWrapper.entityTypeOf(onestop_id) === OnestopIdEntityType.Feed;
-OnestopIdWrapper.geohashOf(onestop_id) === "9q9";
-OnestopIdWrapper.nameof(onestop_id) === "caltrain";
+OnestopId.entityTypeOf(onestop_id) === EntityType.Feed;
+OnestopId.geohashOf(onestop_id) === "9q9";
+OnestopId.nameof(onestop_id) === "caltrain";
 
-const wrapper = new OnestopIdWrapper(onestop_id);
-wrapper.entityType === OnestopIdEntityType.Feed;
-wrapper.geohash === "9q9";
-wrapper.name === "caltrain";
+const onestopId = OnestopId.parse(onestop_id);
+onestopId.entityType === EntityType.Feed;
+onestopId.geohash === "9q9";
+onestopId.name === "caltrain";
 ```

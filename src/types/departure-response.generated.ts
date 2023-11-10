@@ -38,12 +38,12 @@ export interface Departure {
   continuous_pickup: null;
   departure: Arrival;
   departure_time: string;
-  drop_off_type: null;
+  drop_off_type: number | null;
   interpolated: null;
-  pickup_type: null;
+  pickup_type: number | null;
   service_date: Date;
   shape_dist_traveled: number;
-  stop_headsign: string;
+  stop_headsign: null | string;
   stop_sequence: number;
   timepoint: null;
   trip: Trip;
@@ -348,12 +348,12 @@ const typeMap: any = {
       { json: "continuous_pickup", js: "continuous_pickup", typ: null },
       { json: "departure", js: "departure", typ: r("Arrival") },
       { json: "departure_time", js: "departure_time", typ: "" },
-      { json: "drop_off_type", js: "drop_off_type", typ: null },
+      { json: "drop_off_type", js: "drop_off_type", typ: u(0, null) },
       { json: "interpolated", js: "interpolated", typ: null },
-      { json: "pickup_type", js: "pickup_type", typ: null },
+      { json: "pickup_type", js: "pickup_type", typ: u(0, null) },
       { json: "service_date", js: "service_date", typ: Date },
       { json: "shape_dist_traveled", js: "shape_dist_traveled", typ: 3.14 },
-      { json: "stop_headsign", js: "stop_headsign", typ: "" },
+      { json: "stop_headsign", js: "stop_headsign", typ: u(null, "") },
       { json: "stop_sequence", js: "stop_sequence", typ: 0 },
       { json: "timepoint", js: "timepoint", typ: null },
       { json: "trip", js: "trip", typ: r("Trip") },

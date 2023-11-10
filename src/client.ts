@@ -11,7 +11,6 @@ export type ClientOptions =
   | string;
 
 export type RateLimit = {
-  id: number;
   limitPerMinute: number;
   limitPerMonth: number;
   remainingInMinute: number;
@@ -58,7 +57,6 @@ export default class Client {
     }
 
     this._rateLimit = {
-      id: Math.random(),
       limitPerMinute: 60,
       limitPerMonth: 10_000,
       remainingInMinute: 60,
@@ -68,24 +66,21 @@ export default class Client {
   }
 
   private async applyRateLimit(): Promise<void> {
-    const { id: oldId, remainingInMinute, resetsAt } = this.rateLimit;
+    const rateLimit = this.rateLimit;
+    const { limitPerMinute, remainingInMinute, resetsAt } = rateLimit;
 
     if (remainingInMinute <= 0) {
       await sleep(resetsAt - performance.now());
-      const { id, limitPerMinute } = this.rateLimit;
-      // _rateLimit was set by a different async invocation
-      if (oldId !== id) return this.applyRateLimit();
+      // rateLimit was set by a different async invocation
+      if (rateLimit !== this.rateLimit) return this.applyRateLimit();
 
       this._rateLimit = {
-        ...this.rateLimit,
-        id: Math.random(),
+        ...rateLimit,
         remainingInMinute: limitPerMinute,
-        resetsAt: performance.now(),
       };
     } else {
       this._rateLimit = {
-        ...this.rateLimit,
-        id: Math.random(),
+        ...rateLimit,
         remainingInMinute: remainingInMinute - 1,
       };
     }
@@ -112,7 +107,6 @@ export default class Client {
     const resetsAt = performance.now() + resetsInSeconds * 1000;
 
     this._rateLimit = {
-      id: Math.random(),
       limitPerMinute,
       limitPerMonth,
       remainingInMinute,

@@ -8,8 +8,8 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface TripResponse {
-  trips: Trip[];
   meta?: Meta;
+  trips: Trip[];
 }
 
 export interface Meta {
@@ -268,8 +268,8 @@ function r(name: string) {
 const typeMap: any = {
   TripResponse: o(
     [
-      { json: "trips", js: "trips", typ: a(r("Trip")) },
       { json: "meta", js: "meta", typ: u(undefined, r("Meta")) },
+      { json: "trips", js: "trips", typ: a(r("Trip")) },
     ],
     false,
   ),

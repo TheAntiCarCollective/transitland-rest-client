@@ -1,90 +1,87 @@
-import {
-  InvalidOnestopIdError,
-  OnestopIdEntityType,
-  OnestopIdWrapper,
-} from "./onestop-id";
+import { EntityType, OnestopId, ParsingError } from "./onestop-id";
 
 describe.each([
   {
-    entityType: OnestopIdEntityType.Operator,
+    entityType: EntityType.Operator,
     geohash: "9q9",
     name: "BART",
-    value: "o-9q9-BART",
+    string: "o-9q9-BART",
   },
   {
-    entityType: OnestopIdEntityType.Feed,
+    entityType: EntityType.Feed,
     geohash: "9q9",
     name: "bart",
-    value: "f-9q9-bart",
+    string: "f-9q9-bart",
   },
   {
-    entityType: OnestopIdEntityType.Agency,
+    entityType: EntityType.Agency,
     geohash: "9q9",
     name: "bart",
-    value: "o-9q9-bart",
+    string: "o-9q9-bart",
   },
   {
-    entityType: OnestopIdEntityType.Route,
+    entityType: EntityType.Route,
     geohash: "9q8y",
     name: "red~s",
-    value: "r-9q8y-red~s",
+    string: "r-9q8y-red~s",
   },
   {
-    entityType: OnestopIdEntityType.Stop,
+    entityType: EntityType.Stop,
     geohash: "9q9jz7jvbh",
     name: "unioncity",
-    value: "s-9q9jz7jvbh-unioncity",
+    string: "s-9q9jz7jvbh-unioncity",
   },
   {
-    entityType: OnestopIdEntityType.Station,
+    entityType: EntityType.Station,
     geohash: "9q9jz7jvbh",
     name: "unioncity",
-    value: "s-9q9jz7jvbh-unioncity",
+    string: "s-9q9jz7jvbh-unioncity",
   },
   {
-    entityType: OnestopIdEntityType.Feed,
+    entityType: EntityType.Feed,
     geohash: undefined,
     name: "galesburg~il~us",
-    value: "f-galesburg~il~us",
+    string: "f-galesburg~il~us",
   },
   {
-    entityType: OnestopIdEntityType.Operator,
+    entityType: EntityType.Operator,
     geohash: "ezjm",
     name: "informaciónoficial~consorcioregionaldetransportesdemadrid",
-    value: "o-ezjm-informaciónoficial~consorcioregionaldetransportesdemadrid",
+    string: "o-ezjm-informaciónoficial~consorcioregionaldetransportesdemadrid",
   },
   {
-    entityType: OnestopIdEntityType.Agency,
+    entityType: EntityType.Agency,
     geohash: "xn39",
     name: "瑞浪市",
-    value: "o-xn39-瑞浪市",
+    string: "o-xn39-瑞浪市",
   },
   {
-    entityType: OnestopIdEntityType.Route,
+    entityType: EntityType.Route,
     geohash: "xn39k",
     name: "瑞浪市コミュニティバス釜戸大湫線",
-    value: "r-xn39k-瑞浪市コミュニティバス釜戸大湫線",
+    string: "r-xn39k-瑞浪市コミュニティバス釜戸大湫線",
   },
-])("Parse '%s'", ({ entityType, geohash, name, value }) => {
-  const wrapper = new OnestopIdWrapper(value);
+])("Parse '%s'", ({ entityType, geohash, name, string }) => {
+  const onestopId = OnestopId.parse(string);
 
   test(`entityType equals ${entityType}`, () => {
-    expect(wrapper.entityType).toStrictEqual(entityType);
-    expect(OnestopIdWrapper.entityTypeOf(value)).toStrictEqual(entityType);
+    expect(onestopId.entityType).toStrictEqual(entityType);
+    expect(OnestopId.entityTypeOf(string)).toStrictEqual(entityType);
   });
 
   test(`geohash equals ${geohash}`, () => {
-    expect(wrapper.geohash).toStrictEqual(geohash);
-    expect(OnestopIdWrapper.geohashOf(value)).toStrictEqual(geohash);
+    expect(onestopId.geohash).toStrictEqual(geohash);
+    expect(OnestopId.geohashOf(string)).toStrictEqual(geohash);
   });
 
   test(`name equals ${name}`, () => {
-    expect(wrapper.name).toStrictEqual(name);
-    expect(OnestopIdWrapper.nameOf(value)).toStrictEqual(name);
+    expect(onestopId.name).toStrictEqual(name);
+    expect(OnestopId.nameOf(string)).toStrictEqual(name);
   });
 
-  test(`value equals ${value}`, () => {
-    expect(wrapper.value).toStrictEqual(value);
+  test(`string coercion equals ${string}`, () => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    expect(`${onestopId}`).toStrictEqual(string);
   });
 });
 
@@ -97,6 +94,6 @@ test.each([
   // TODO invalid geohash "o-a9q9-BART",
   // TODO invalid name "o-9q9-BART.",
   // TODO invalid name "o-9q9-BART ",
-])("Throw for '%s'", (value) => {
-  expect(() => new OnestopIdWrapper(value)).toThrow(InvalidOnestopIdError);
+])("Throw for '%s'", (string) => {
+  expect(() => OnestopId.parse(string)).toThrow(ParsingError);
 });

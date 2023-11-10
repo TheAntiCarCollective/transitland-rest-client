@@ -1,21 +1,10 @@
 /**
- * An Onestop ID is an alphanumeric, global, immutable identifier for transit
- * feeds, operators/agencies, stops/stations, and routes provided by
- * authoritative sources that contain timetable and geographic information for
- * transit networks.
+ * Entity types for Onestop IDs.
  *
- * Every Onestop ID includes two or three components, separated by hyphens.
- *
- * @link https://www.transit.land/documentation/concepts/onestop-id-scheme/#what-is-in-a-onestop-id
- */
-export type OnestopId = string;
-
-/**
- * Entity types for Onestop IDs. See {@link OnestopIdWrapper.entityType}
- * for more details.
+ * @see OnestopId.entityType
  */
 /* eslint-disable @typescript-eslint/no-duplicate-enum-values */
-export enum OnestopIdEntityType {
+export enum EntityType {
   Agency = "o",
   Feed = "f",
   Operator = "o",
@@ -25,32 +14,39 @@ export enum OnestopIdEntityType {
 }
 /* eslint-enable @typescript-eslint/no-duplicate-enum-values */
 
-/** Thrown when parsing an invalid Onestop ID. */
-export class InvalidOnestopIdError extends Error {
+/** Thrown when parsing an invalid Onestop ID string. */
+export class ParsingError extends Error {
   /**
-   * Creates a new {@link InvalidOnestopIdError}.
+   * Creates a new `ParsingError`.
    *
-   * @param value The invalid Onestop ID.
-   * @param reason The reason why "value" is invalid.
+   * @param string The invalid Onestop ID string.
+   * @param reason The reason `string` is invalid.
    */
-  constructor(value: string, reason: string) {
-    super(`${value} is not a valid OnestopId: ${reason}`);
+  constructor(string: string, reason: string) {
+    super(`${reason}: ${string}`);
   }
 }
 
 /**
- * A convenient wrapper for parsing Onestop ID values and getting their
- * components.
+ * An Onestop ID is an alphanumeric, global, immutable identifier for transit
+ * feeds, operators/agencies, stops/stations, and routes provided by
+ * authoritative sources that contain timetable and geographic information for
+ * transit networks.
  *
- * Do not use this class for (de)serialization; instead, use {@link OnestopId}.
+ * Every Onestop ID includes two or three components, separated by hyphens.
+ *
+ * Do not use this class for (de)serialization of Onestop ID strings; instead,
+ * use the string returned by {@link toString}.
+ *
+ * @link https://www.transit.land/documentation/concepts/onestop-id-scheme/#what-is-in-a-onestop-id
  */
-export class OnestopIdWrapper {
+export class OnestopId {
   /**
    * The first component of an Onestop ID is its entity type.
    *
    * @link https://www.transit.land/documentation/concepts/onestop-id-scheme/#entity-types
    */
-  readonly entityType: OnestopIdEntityType;
+  readonly entityType: EntityType;
 
   /**
    * The second component of an Onestop ID is an optional geohash.
@@ -107,75 +103,99 @@ export class OnestopIdWrapper {
    */
   readonly name: string;
 
-  /** The parsed Onestop ID. */
-  readonly value: OnestopId;
-
-  /**
-   * Parses an Onestop ID then creates a new {@link OnestopIdWrapper}.
-   *
-   * @param value The Onestop ID.
-   * @throws InvalidOnestopIdError If "value" is an invalid Onestop ID.
-   */
-  constructor(value: string) {
-    const components = value.split("-");
-    const { length } = components;
-    if (length < 2 || length > 3)
-      // prettier-ignore
-      throw new InvalidOnestopIdError(value, `${length} components; expected 2 or 3`);
-
-    const entityType = components[0];
-    if (entityType === undefined)
-      throw new InvalidOnestopIdError(value, "Missing entityType");
-    const validEntityTypes = Object.values(OnestopIdEntityType) as string[];
-    if (!validEntityTypes.includes(entityType))
-      throw new InvalidOnestopIdError(value, "Invalid entityType");
-    this.entityType = entityType as OnestopIdEntityType;
-
-    const geohash = length === 2 ? undefined : components[1];
-    if (geohash !== undefined) {
-      // TODO Validate geohash
-      this.geohash = geohash;
-    }
-
-    const name = geohash === undefined ? components[1] : components[2];
-    if (name === undefined)
-      throw new InvalidOnestopIdError(value, "Missing name");
-    // TODO Validate name
+  private constructor(
+    entityType: EntityType,
+    geohash: string | undefined,
+    name: string,
+  ) {
+    this.entityType = entityType;
+    this.geohash = geohash;
     this.name = name;
-
-    this.value = value;
   }
 
   /**
-   * Parses an Onestop ID then gets its {@link entityType} component.
+   * Parses a string argument and returns its {@link OnestopId.entityType}
+   * component.
    *
-   * @param id The Onestop ID.
-   * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
+   * @param string The Onestop ID string to parse.
+   * @throws ParsingError If `string` is an invalid Onestop ID.
    */
-  static entityTypeOf(id: OnestopId) {
-    const { entityType } = new OnestopIdWrapper(id);
+  static entityTypeOf(string: string) {
+    const { entityType } = OnestopId.parse(string);
     return entityType;
   }
 
   /**
-   * Parses an Onestop ID then gets its {@link geohash} component.
+   * Parses a string argument and returns its {@link OnestopId.geohash}
+   * component.
    *
-   * @param id The Onestop ID.
-   * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
+   * @param string The Onestop ID string to parse.
+   * @throws ParsingError If `string` is an invalid Onestop ID.
    */
-  static geohashOf(id: OnestopId) {
-    const { geohash } = new OnestopIdWrapper(id);
+  static geohashOf(string: string) {
+    const { geohash } = OnestopId.parse(string);
     return geohash;
   }
 
   /**
-   * Parses an Onestop ID then gets its {@link name} component.
+   * Parses a string argument and returns its {@link OnestopId.name}
+   * component.
    *
-   * @param id The Onestop ID.
-   * @throws InvalidOnestopIdError If "id" is an invalid Onestop ID.
+   * @param string The Onestop ID string to parse.
+   * @throws ParsingError If `string` is an invalid Onestop ID.
    */
-  static nameOf(id: OnestopId) {
-    const { name } = new OnestopIdWrapper(id);
+  static nameOf(string: string) {
+    const { name } = OnestopId.parse(string);
     return name;
+  }
+
+  /**
+   * Parses a string argument and returns an {@link OnestopId}.
+   *
+   * @param string The Onestop ID string to parse.
+   * @throws ParsingError If `string` is an invalid Onestop ID.
+   */
+  static parse(string: string) {
+    // region Components
+    const components = string.split("-");
+    const { length } = components;
+    if (length < 2 || length > 3)
+      // prettier-ignore
+      throw new ParsingError(string, `Expected 2 or 3 components, but parsed ${length}`);
+    // endregion
+
+    // region Entity Type
+    const entityTypeComponent = components[0];
+    if (entityTypeComponent === undefined)
+      throw new ParsingError(string, "Missing entity type");
+    const validEntityTypes = Object.values(EntityType) as string[];
+    if (!validEntityTypes.includes(entityTypeComponent))
+      // prettier-ignore
+      throw new ParsingError(string, `Invalid entity type "${entityTypeComponent}"`);
+    const entityType = entityTypeComponent as EntityType;
+    // endregion
+
+    // region Geohash
+    const geohash = length === 2 ? undefined : components[1];
+    if (geohash !== undefined) {
+      // TODO Validate geohash
+    }
+    // endregion
+
+    // region Name
+    const name = geohash === undefined ? components[1] : components[2];
+    if (name === undefined) throw new ParsingError(string, "Missing name");
+    // TODO Validate name
+    // endregion
+
+    return new OnestopId(entityType, geohash, name);
+  }
+
+  /** @inheritDoc */
+  toString() {
+    const { entityType, geohash, name } = this;
+    return geohash === undefined
+      ? `${entityType}-${name}`
+      : `${entityType}-${geohash}-${name}`;
   }
 }
