@@ -1,0 +1,15 @@
+{
+  "git": {
+    "requireBranch": "main",
+    "requireCommits": true
+  },
+  "github": {
+    "assets": ["transitland-rest-client-*.tgz"],
+    "release": true,
+    "releaseName": "${version}"
+  },
+  "npm": {
+    "publish": false,
+    "skipChecks": true
+  }
+}

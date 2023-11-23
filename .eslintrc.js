@@ -25,7 +25,6 @@ module.exports = {
   rules: {
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "@typescript-eslint/consistent-type-imports": "error",
-    "no-console": "error",
     "unicorn/no-array-callback-reference": "off",
     "unicorn/number-literal-case": "off",
     "unicorn/prefer-module": "off",

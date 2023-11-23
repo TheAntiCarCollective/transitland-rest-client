@@ -1,6 +1,6 @@
-import type { Meta } from "./index";
+import type { Page } from "./client.types";
 
-import sleep from "./shared/sleep";
+import timeout from "./shared/timeout";
 
 // region Types
 export type ClientOptions =
@@ -27,8 +27,6 @@ export type FetchOptions =
       url: string;
     }
   | string;
-
-export type Page = Partial<Record<"meta", Meta>>;
 // endregion
 
 export class TransitlandError extends Error {
@@ -70,7 +68,7 @@ export default class Client {
     const { limitPerMinute, remainingInMinute, resetsAt } = rateLimit;
 
     if (remainingInMinute <= 0) {
-      await sleep(resetsAt - performance.now());
+      await timeout(resetsAt - performance.now());
       // rateLimit was set by a different async invocation
       if (rateLimit !== this.rateLimit) return this.applyRateLimit();
 
